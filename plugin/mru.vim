@@ -351,7 +351,13 @@ function! s:MRU_LoadList()
     else
         let s:MRU_files = []
     endif
-
+    let l:MRU_files_filtered = []
+    for fileName in s:MRU_files
+      if fileName != expand('%:p')
+        call add(l:MRU_files_filtered, fileName)
+      endif
+    endfor
+    let s:MRU_files = l:MRU_files_filtered
     " Refresh the MRU menu with the latest list of filenames
     call s:MRU_Refresh_Menu()
 endfunction
