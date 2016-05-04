@@ -576,17 +576,20 @@ function! s:MRU_Window_Edit_File(fname, multi, edit_type, open_type)
         " If the selected file is already open in one of the windows,
         " jump to it
         let winnum = bufwinnr('^' . a:fname . '$')
-        if winnum != -1
-            exe winnum . 'wincmd w'
-        else
             if g:MRU_Auto_Close == 1 && g:MRU_Use_Current_Window == 0
                 " Jump to the window from which the MRU window was opened
-                if exists('s:MRU_last_buffer')
-                    let last_winnr = bufwinnr(s:MRU_last_buffer)
-                    if last_winnr != -1 && last_winnr != winnr()
-                        exe last_winnr . 'wincmd w'
-                    endif
+                if exists('s:MRU_last_window')
+                    "let last_winnr = bufwinnr(s:MRU_last_buffer)
+                    exe s:MRU_last_window . 'wincmd p'
+                    "if last_winnr != -1 && last_winnr != winnr()
+                    "endif
                 endif
+                "if exists('s:MRU_last_buffer')
+                    "let last_winnr = bufwinnr(s:MRU_last_buffer)
+                    "if last_winnr != -1 && last_winnr != winnr()
+                        "exe last_winnr . 'wincmd w'
+                    "endif
+                "endif
             else
                 if g:MRU_Use_Current_Window == 0
                     " Goto the previous window
@@ -629,7 +632,7 @@ function! s:MRU_Window_Edit_File(fname, multi, edit_type, open_type)
                     exe 'view ' . esc_fname
                 endif
             endif
-        endif
+        "endif
     endif
 endfunction
 
@@ -702,6 +705,8 @@ function! s:MRU_Open_Window(...)
     " entry is selected from the MRU window. The window number is not saved,
     " as the window number will change when new windows are opened.
     let s:MRU_last_buffer = bufnr('%')
+    let s:MRU_last_window = winnr()
+
 
     let bname = '__MRU_Files__'
 
